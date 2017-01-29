@@ -3,6 +3,7 @@ import StreamingPageManager from '../StreamingPageManager.js';
 import LineChart from './charts/LineChart.js';
 import FaultFlagDisplay from './FaultFlagDisplay.js';
 import GenericParameterLabel from './GenericParameterLabel.js';
+import EnumDisplay from  './EnumStatusDisplay.js';
 import ConfirmButton from './buttons/ConfirmButton.js';
 
 import io from 'socket.io-client';
@@ -61,7 +62,30 @@ class Overview extends Component {
 			<div>
 				<legend>Mission</legend>
 				<div className="row">
-					<ConfirmButton className="btn btn-danger" delay={2000} action={this.resetPod}>Force pre-run phase</ConfirmButton>
+					<div className="col-md-2">
+						<ConfirmButton className="btn btn-danger" delay={2000} action={this.resetPod}>Force pre-run phase</ConfirmButton>
+					</div>
+					<div className="col-md-1">
+						<EnumDisplay
+							name="Pod"
+							parameter="Pod Status"
+							enumMap={{
+								0: "FAULT",
+								1: "IDLE",
+								2: "READY",
+								3: "PUSHING",
+								4: "COASTING",
+								5: "BREAKING",
+							}}
+							colorMap={{
+								0: 'red',
+							}}
+							style={{
+								fontSize: 24,
+							}}
+							StreamingPageManager={this.state.streamManager}
+						/>
+					</div>
 				</div>
 				<div>
 					<legend>Pod Health</legend>
@@ -72,10 +96,14 @@ class Overview extends Component {
 							</div>
 						</div>
 						<LeftRightParameters>
-							<NamedParameter
+							<EnumDisplay
 								name="State"
 								parameter="Brake State"
-								hex="true"
+								enumMap={{
+									0: "UNKNOWN",
+									1: "CLOSED",
+									2: "OPEN",
+								}}
 								StreamingPageManager={this.state.streamManager}
 							/>
 							<NamedParameter
@@ -200,7 +228,7 @@ class Overview extends Component {
 									parameters={['Power A BMS Node Temp', 'Power B BMS Node Temp']}
 									title="Power node Temperature"
 									yAxisLabel="Temperature (&deg;C)"
-									xAxisLabel="Time (s)" 
+									xAxisLabel="Time (s)"
 									totalPoints={60}
 									height={250}
 								/>
@@ -212,7 +240,7 @@ class Overview extends Component {
 									parameters={['Power A BMS Pack Volts', 'Power B BMS Pack Volts']}
 									title="Power node Voltage"
 									yAxisLabel="Temperature (V)"
-									xAxisLabel="Time (s)" 
+									xAxisLabel="Time (s)"
 									totalPoints={60}
 									height={250}
 								/>
